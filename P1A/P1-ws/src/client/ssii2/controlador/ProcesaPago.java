@@ -181,12 +181,13 @@ private void printAddresses(HttpServletRequest request, HttpServletResponse resp
         // Almacenamos la tarjeta en el pago
         pago.setTarjeta(tarjeta);
 		
-        if (! dao.compruebaTarjeta(tarjeta)) {           
-            enviaError(new Exception("Tarjeta no autorizada:"), request, response);
+        pago = dao.realizaPago(pago);
+    	if (pago == null) {      
+            enviaError(new Exception("Pago incorrecto"), request, response);
             return;
         }
 
-	if (! dao.realizaPago(pago)) {      
+        if (! dao.realizaPago(pago)) {      
             enviaError(new Exception("Pago incorrecto"), request, response);
             return;
         }

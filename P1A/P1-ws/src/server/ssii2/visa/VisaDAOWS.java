@@ -215,7 +215,7 @@ public class VisaDAOWS extends DBTester {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
-        boolean ret = false;
+        PagoBean ret = null;
         String codRespuesta = "999"; // En principio, denegado
 
         // TODO: Utilizar en funcion de isPrepared()
@@ -247,7 +247,7 @@ public class VisaDAOWS extends DBTester {
                pstmt.setDouble(2, pago.getImporte());
                pstmt.setString(3, pago.getIdComercio());
                pstmt.setString(4, pago.getTarjeta().getNumero());
-               ret = false;
+               ret = null;
                if (!pstmt.execute()
                        && pstmt.getUpdateCount() == 1) {
                  ret = pago;
@@ -390,7 +390,10 @@ public class VisaDAOWS extends DBTester {
             }
         }
 
-        return ret;
+        if(ret != null)
+            return pagos;
+        else
+            return null;
     }
 
     // Borrar los pagos asociados a un comercio
