@@ -16,14 +16,19 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ssii2.visa.PagoBean;
 import ssii2.visa.*;
-import javax.xml.ws.BindingProvider;
+// import javax.xml.ws.BindingProvider;
+import javax.ejb.EJB;
+import ssii2.visa.VisaDAOLocal;
 import java.util.List;
 /**
  *
  * @author phaya
  */
 public class GetPagos extends ServletRaiz {
+    @EJB(name="VisaDAOBean", beanInterface=VisaDAOLocal.class)
+    private VisaDAOLocal dao;
 
     /**
      * Par&aacute;metro que indica el identificador de comercio
@@ -48,6 +53,7 @@ public class GetPagos extends ServletRaiz {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
+    /*
       VisaDAOWSService service = new VisaDAOWSService();
       VisaDAOWS dao = service. getVisaDAOWSPort ();
       BindingProvider bp = (BindingProvider) dao;
@@ -57,10 +63,10 @@ public class GetPagos extends ServletRaiz {
 		String idComercio = request.getParameter(PARAM_ID_COMERCIO);
 
 		/* Petici&oacute;n de los pagos para el comercio */
-    /*added*/
-    List<PagoBean> pagosList = dao.getPagos(idComercio);
-    PagoBean[] pagos = new PagoBean[pagosList.size()];
-    pagos = pagosList.toArray(pagos);
+        /*added*/
+        List<PagoBean> pagosList = dao.getPagos(idComercio);
+        PagoBean[] pagos = new PagoBean[pagosList.size()];
+        pagos = pagosList.toArray(pagos);
 
         request.setAttribute(ATTR_PAGOS, pagos);
         reenvia("/listapagos.jsp", request, response);
