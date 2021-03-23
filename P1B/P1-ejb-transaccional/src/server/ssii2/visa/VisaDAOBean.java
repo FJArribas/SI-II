@@ -378,7 +378,7 @@ public class VisaDAOBean extends DBTester implements VisaDAOLocal {
      */
     /*added*/
     // @WebMethod(operationName = "getPagos")
-    public ArrayList<PagoBean> getPagos(/*@WebParam(name = "idComercio")*/ String idComercio){
+    public PagoBean[] getPagos(/*@WebParam(name = "idComercio")*/ String idComercio){
 
         PreparedStatement pstmt = null;
         Connection pcon = null;
@@ -442,7 +442,7 @@ public class VisaDAOBean extends DBTester implements VisaDAOLocal {
             }
         }
 
-        return pagos;
+        return ret;
     }
 
     // Borrar los pagos asociados a un comercio
