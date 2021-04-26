@@ -1,6 +1,6 @@
 /**
  * Pr&aacute;ctricas de Sistemas Inform&aacute;ticos II
- * 
+ *
  * Implementacion de la interfaz de VISA utilizando como backend
  * una base de datos.
  * Implementa dos modos de acceso (proporcionados por la clase DBTester):
@@ -19,17 +19,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-
-
+import javax.jws.WebService;
 
 /**
  * @author jaime
  */
-@WebService
+
+@WebService()
+
 public class VisaDAOWS extends DBTester {
 
     private boolean debug = false; // debug = false;
@@ -79,9 +78,9 @@ public class VisaDAOWS extends DBTester {
                     " and idComercio = ?";
     /**************************************************/
 
-    
+
     /**
-     * Constructor de la clase     
+     * Constructor de la clase
      */
     public VisaDAOWS() {
         return;
@@ -100,7 +99,7 @@ public class VisaDAOWS extends DBTester {
                     + "' and codigoVerificacion='" + tarjeta.getCodigoVerificacion() + "'";
         return qry;
     }
-    
+
     /**
      *  getQryInsertPago
      */
@@ -136,12 +135,12 @@ public class VisaDAOWS extends DBTester {
      * @param tarjeta Objeto con toda la informacion de la tarjeta
      * @return true si la comprobacion contra las tarjetas contenidas en
      *         en la tabla TARJETA fue satisfactoria, false en caso contrario     */
-    @WebMethod
-    public boolean compruebaTarjeta(@WebParam TarjetaBean tarjeta) {
+    @WebMethod(operationName = "compruebaTarjeta")
+    public boolean compruebaTarjeta(@WebParam(name = "tarjeta") TarjetaBean tarjeta) {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
-        boolean ret = false;
+        Boolean ret = false;
         String qry = null;
 
         // TODO: Utilizar en funcion de isPrepared()
@@ -166,7 +165,7 @@ public class VisaDAOWS extends DBTester {
                pstmt.setString(3, tarjeta.getFechaEmision());
                pstmt.setString(4, tarjeta.getFechaCaducidad());
                pstmt.setString(5, tarjeta.getCodigoVerificacion());
-               rs = pstmt.executeQuery();               
+               rs = pstmt.executeQuery();
 
             } else {
             /**************************************************/
@@ -176,9 +175,10 @@ public class VisaDAOWS extends DBTester {
             rs = stmt.executeQuery(qry);
 
             } /**********************/
-            
+
             /* Si hay siguiente registro, la tarjeta valido OK */
             ret = rs.next();
+
 
         } catch (Exception ee) {
             errorLog(ee.toString());
@@ -206,12 +206,13 @@ public class VisaDAOWS extends DBTester {
     }
 
     /**
-     * Realiza el pago 
+     * Realiza el pago
      * @param pago
-     * @return
+     * @return Null en caso de error o el pago modificado
      */
-    @WebMethod
-    public synchronized PagoBean realizaPago(@WebParam PagoBean pago) {
+    /*added*/
+    @WebMethod(operationName = "realizaPago")
+    public synchronized PagoBean realizaPago(@WebParam(name = "pago") PagoBean pago) {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -253,7 +254,7 @@ public class VisaDAOWS extends DBTester {
                  ret = pago;
                }
 
-            } else {            
+            } else {
             /**************************************************/
             stmt = con.createStatement();
             String insert = getQryInsertPago(pago);
@@ -266,7 +267,7 @@ public class VisaDAOWS extends DBTester {
             }/****************/
 
             // Obtener id.autorizacion
-            if (ret) {                
+            if (ret != null) {
 
                 /* TODO Permitir usar prepared statement si
                  * isPrepared() = true */
@@ -284,7 +285,7 @@ public class VisaDAOWS extends DBTester {
                     String select = getQryBuscaPagoTransaccion(pago);
                     errorLog(select);
                     rs = stmt.executeQuery(select);
-                    
+
                 }/*************************************/
                 if (rs.next()) {
                     pago.setIdAutorizacion(String.valueOf(rs.getInt("idAutorizacion")));
@@ -325,8 +326,9 @@ public class VisaDAOWS extends DBTester {
      * @param idComercio
      * @return
      */
-    @WebMethod
-    public ArrayList<PagoBean> getPagos(@WebParam String idComercio) {
+    /*added*/
+    @WebMethod(operationName = "getPagos")
+    public ArrayList<PagoBean> getPagos(@WebParam(name = "idComercio") String idComercio){
 
         PreparedStatement pstmt = null;
         Connection pcon = null;
@@ -390,10 +392,7 @@ public class VisaDAOWS extends DBTester {
             }
         }
 
-        if(ret != null)
-            return pagos;
-        else
-            return null;
+        return pagos;
     }
 
     // Borrar los pagos asociados a un comercio
@@ -402,8 +401,8 @@ public class VisaDAOWS extends DBTester {
      * @param idComercio
      * @return numero de registros afectados
      */
-    @WebMethod
-    public int delPagos(@WebParam String idComercio) {
+    @WebMethod(operationName = "delPagos")
+    public int delPagos(@WebParam(name = "idComercio") String idComercio) {
 
         PreparedStatement pstmt = null;
         Connection pcon = null;
@@ -453,13 +452,13 @@ public class VisaDAOWS extends DBTester {
      * TODO: Metodos isPrepared() y setPrepared()
      */
     /********************************************************/
-    @WebMethod
+    @WebMethod(operationName = "isPrepared")
     public boolean isPrepared() {
         return prepared;
     }
 
-    @WebMethod
-    public void setPrepared(@WebParam boolean prepared) {
+    @WebMethod(operationName = "setPrepared")
+    public void setPrepared(@WebParam(name = "prepared") boolean prepared) {
         this.prepared = prepared;
     }
     /********************************************************/
@@ -467,7 +466,7 @@ public class VisaDAOWS extends DBTester {
     /**
      * @return the debug
      */
-    @WebMethod
+    @WebMethod(operationName = "isDebug")
     public boolean isDebug() {
         return debug;
     }
@@ -475,17 +474,18 @@ public class VisaDAOWS extends DBTester {
     /**
      * @param debug the debug to set
      */
-    @WebMethod
-    public void setDebug(@WebParam boolean debug) {
+    @WebMethod(operationName = "setDebug")
+    public void setDebug(@WebParam(name = "debug") boolean debug) {
         this.debug = debug;
     }
 
     /**
      * @param debug the debug to set
      */
-    //public void setDebug(@WebParam String debug) {
-    //    this.debug = (debug.equals("true"));
-    //}
+    @WebMethod(exclude=true)
+    public void setDebug(String debug) {
+        this.debug = (debug.equals("true"));
+    }
 
 
     /**
@@ -497,15 +497,21 @@ public class VisaDAOWS extends DBTester {
                                error);
     }
 
+    /**
+     * @return the pooled
+     */
     @Override
-    @WebMethod
+    @WebMethod(operationName = "isDirectConnection")
     public boolean isDirectConnection() {
         return super.isDirectConnection();
     }
 
+    /**
+     * @param directConnection valor de conexión directa o indirecta
+     */
     @Override
-    @WebMethod
-    public void setDirectConnection(@WebParam boolean directConnection) {
+    @WebMethod(operationName = "setDirectConnection")
+    public void setDirectConnection(@WebParam(name = "directConnection") boolean directConnection) {
         super.setDirectConnection(directConnection);
     }
 

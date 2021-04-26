@@ -1,7 +1,7 @@
 /**
  * Pr&aacute;ctricas de Sistemas Inform&aacute;ticos II
- * 
- * Esta servlet se encarga de eliminar los pagos para un determinado comercio. 
+ *
+ * Esta servlet se encarga de eliminar los pagos para un determinado comercio.
  * Es necesario que en la llamada se incluya un valor correcto del par&aacute;metros:
  * <dl>
  *    <dt>Identificador del comercio</dt>
@@ -28,36 +28,34 @@ import ssii2.visa.VisaDAORemote;
 public class DelPagos extends ServletRaiz {
     @EJB(name = "VisaDAOBean", beanInterface = VisaDAORemote.class)
     private VisaDAORemote dao;
-    /** 
+    /**
      * Par&aacute;metro que indica el identificador de comercio
      */
     public final static String PARAM_ID_COMERCIO = "idComercio";
 
-    /** 
+    /**
      * Par&aacute;metro que indica la ruta de retorno
      */
     public final static String PARAM_RUTA_RETORNO = "ruta";
 
-    /** 
+    /**
      * Atribute que hace referencia a la lista de pagos
      */
     public final static String ATTR_BORRADOS = "borrados";
-    
-    /** 
+
+    /**
     * Procesa una petici&oacute;n HTTP tanto <code>GET</code> como <code>POST</code>.
     * @param request objeto de petici&oacute;n
     * @param response objeto de respuesta
-    */    
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {        
-        
-		VisaDAO dao = new VisaDAO();
-		
-		/* Se recoge de la petici&oacute;n el par&aacute;metro idComercio*/  
+    throws ServletException, IOException {
+
+		/* Se recoge de la petici&oacute;n el par&aacute;metro idComercio*/
 		String idComercio = request.getParameter(PARAM_ID_COMERCIO);
-		
+
 		/* Petici&oacute;n de los pagos para el comercio */
-		int ret = dao.delPagos(idComercio);        
+		int ret = dao.delPagos(idComercio);
 
 		if (ret != 0) {
 			request.setAttribute(ATTR_BORRADOS, ret);
@@ -65,11 +63,11 @@ public class DelPagos extends ServletRaiz {
 		}
 		else {
 			reenvia("/borradoerror.jsp", request, response);
-		}	
-        return;       
-    }      
-    
-   /** 
+		}
+        return;
+    }
+
+   /**
     * Procesa una petici&oacute;n HTTP <code>GET</code>.
     * @param request objeto de petici&oacute;n
     * @param response objeto de respuesta
@@ -78,9 +76,9 @@ public class DelPagos extends ServletRaiz {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
     * Procesa una petici&oacute;n HTTP <code>POST</code>.
     * @param request objeto de petici&oacute;n
     * @param response objeto de respuesta
@@ -90,8 +88,8 @@ public class DelPagos extends ServletRaiz {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
-    /** 
+
+    /**
     * Devuelve una descripici&oacute;n abreviada del servlet
     */
     @Override
