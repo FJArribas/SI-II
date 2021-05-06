@@ -63,7 +63,7 @@ public class VisaDAO extends DBTester {
 
     private static final String INSERT_PAGOS_QRY =
                     "insert into pago(" +
-                    "idTransaccion,importe,idComercio,numeroTarjeta)" +
+                    "idTransaccion,importe,idComercio,numeroTarjeta,instancia,ip)" +" +
                     " values (?,?,?,?,?,?)";
 
     private static final String SELECT_PAGO_TRANSACCION_QRY =
