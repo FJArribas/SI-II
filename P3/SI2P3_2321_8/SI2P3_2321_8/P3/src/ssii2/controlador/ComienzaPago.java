@@ -1,5 +1,5 @@
 /**
- * Practicas de Sistemas Informaticos II
+ * Practricas de Sistemas Informaticos II
  *
  * Esta servlet se encarga de recibir la peticiones de inicio de pago. Es necesario
  * que en la llamada se incluya un valor correcto de los siguientes parametros:
